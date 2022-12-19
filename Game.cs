@@ -2,7 +2,9 @@
  * 
  * Программа основанная на игре "Города"
  * Вычисляет саммую длинную партию, которую теоретически можно сыграть.
- * 
+ * Идеи:
+ * 1 - выводить процент использования городов
+ * 2 - улучшить отбор следующего города, н-р выбирать так, чтобы следующие ходы потенциально не уменьшали запасы слов на редко используемые буквы.
  */
 
 using System.Collections.Generic;
@@ -14,8 +16,8 @@ namespace Games_Cities
         static string cities_list_path = "C:\\Users\\Ermol\\source\\repos\\Games_Cities\\Cities_Ru.txt";
         static List<string> cities = new List<string>();
         static List<string> cities_copy = new List<string>();
-        static List<string> longest_part_game = new List<string>(); // буферный список для сохранения длинной партии
-
+        static List<string> longest_part_game = new List<string>(); // буферный список для сохранения текущей партии
+        static var percent_max;
         // Главная функция
         static void Main(string[] args)
         {
@@ -26,13 +28,14 @@ namespace Games_Cities
             Console.WriteLine("Общее количество городов в игре: " + cities.Count);
             while(i!=1000)
             {
-                determine_the_longest_batch();
-                cities = new List<string>();
-                cities.AddRange(cities_copy);
+                determine_the_longest_batch(); // непосредственно процесс
+                cities = new List<string>(); // обнуляем список с которым работали
+                cities.AddRange(cities_copy); // и заполняем его снова всеми городами из txt 
                 i = i + 1;
             }
             Console.WriteLine("Длинна max: " + longest_part_game.Count());
-            Console.WriteLine(string.Join("\t", longest_part_game));
+            Console.WriteLine("Процент использования городов: " + percent_max);
+            //Console.WriteLine(string.Join("\t", longest_part_game));
 
         }
 
@@ -66,7 +69,12 @@ namespace Games_Cities
                     buffer_of_matches.Add(last_city);
                 }
             }
-            if (buffer_of_matches.Count > longest_part_game.Count) longest_part_game.AddRange(buffer_of_matches);
+            if (buffer_of_matches.Count > longest_part_game.Count)
+            {
+                longest_part_game = new List<string>();
+                longest_part_game.AddRange(buffer_of_matches);
+                percent_max = cities.Count / cities_copy.Count;
+            } 
             return buffer_of_matches.Count;
         }
 

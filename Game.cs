@@ -23,7 +23,6 @@ namespace Games_Cities
 {
     public class Game
     {
-        static string cities_list_path = "C:\\Users\\Ermol\\source\\repos\\Games_Cities\\Cities_Ru.txt";
         static List<string> cities = new List<string>();
         static List<string> longest_part_game = new List<string>(); // буферный список для сохранения текущей партии
         static float percent_max; // Процент использования словаря
